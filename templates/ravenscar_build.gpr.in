@@ -26,11 +26,9 @@ project Ravenscar_Build is
    case $(profile_underscored)_Rp2040_Config.Max_CPUs is
       when "1" =>
          Excluded_Sources := Excluded_Sources & ("a-intnam-2.ads");
-         Excluded_Sources := Excluded_Sources & ("s-bbsumu-2.adb");
 
       when others =>
          Excluded_Sources := Excluded_Sources & ("a-intnam-1.ads");
-         Excluded_Sources := Excluded_Sources & ("s-bbsumu-1.adb");
    end case;
 
    for Excluded_Source_Files use Excluded_Sources;
@@ -38,8 +36,6 @@ project Ravenscar_Build is
    package Naming is
       for Spec ("Ada.Interrupts.Names") use
         "a-intnam-" & $(profile_underscored)_Rp2040_Config.Max_CPUs & ".ads";
-      for Body ("System.BB.Board_Support.Multiprocessors") use
-        "s-bbsumu-" & $(profile_underscored)_Rp2040_Config.Max_CPUs & ".adb";
    end Naming;
 
    package Compiler is

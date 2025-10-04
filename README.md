@@ -67,6 +67,15 @@ Then edit your project file to add the following elements:
    end Linker;
    ```
 
+>[!TIP]
+> It is also recommended to add `--gc-sections` to your linker switches to
+> remove any unused code and data.
+> ```ada
+>    package Linker is
+>      for Switches ("Ada") use Runtime_Build.Linker_Switches & ("-Wl,--gc-sections");
+>    end Linker;
+> ```
+
 ## Resources Used
 
 The light-tasking and embedded runtime profiles use one of the ALARM interrupts

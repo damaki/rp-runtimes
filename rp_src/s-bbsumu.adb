@@ -39,10 +39,13 @@ with Interfaces.RP2040.PSM; use Interfaces.RP2040.PSM;
 with Interfaces.RP2040.SIO; use Interfaces.RP2040.SIO;
 
 with System.BB.CPU_Primitives.Multiprocessors;
+with System.BB.Parameters;
 with System.Machine_Code;
 with System.Storage_Elements;
 
 with System; use System;
+
+with RP2040_Runtime_Config;
 
 separate (System.BB.Board_Support)
 
@@ -83,12 +86,17 @@ package body Multiprocessors is
    -- core1 stack --
    -----------------
 
-   Core1_Stack_Size : constant := 2048;
+   Core1_Stack_Size : constant :=
+     (if BB.Parameters.Multiprocessor
+      then 1024
+      else 0);
 
-   Core1_Stack : aliased array (1 .. Core1_Stack_Size)
-     of System.Storage_Elements.Storage_Element
-     with Linker_Section => (".stack1"),
-     Alignment => Standard'Maximum_Alignment;
+   type Core1_Stack_Array is new System.Storage_Elements.Storage_Array
+     (1 .. Core1_Stack_Size);
+
+   Core1_Stack : aliased Core1_Stack_Array with
+     Linker_Section => (".stack1"),
+     Alignment      => Standard'Maximum_Alignment;
 
    ------------------
    -- Vector table --
@@ -103,7 +111,7 @@ package body Multiprocessors is
    -- Number_Of_CPUs --
    --------------------
 
-   function Number_Of_CPUs return CPU is (2);
+   function Number_Of_CPUs return CPU is (RP2040_Runtime_Config.Max_CPUs);
 
    -----------------
    -- Current_CPU --
@@ -111,18 +119,24 @@ package body Multiprocessors is
 
    function Current_CPU return System.Multiprocessors.CPU is
    begin
-      --  CPUID reads as 0 for core0 and 1 for core1.
-      return System.Multiprocessors.CPU (SIO_Periph.CPUID + 1);
+      if BB.Parameters.Multiprocessor then
+         --  CPUID reads as 0 for core0 and 1 for core1.
+         return System.Multiprocessors.CPU (SIO_Periph.CPUID + 1);
+      else
+         return 1;
+      end if;
    end Current_CPU;
 
-   -----------------------
+   ------------------
    -- Poke_Handler --
-   -----------------------
+   ------------------
 
    procedure Poke_Handler is
    begin
-      Drain_FIFO;
-      CPU_Primitives.Multiprocessors.Poke_Handler;
+      if BB.Parameters.Multiprocessor then
+         Drain_FIFO;
+         CPU_Primitives.Multiprocessors.Poke_Handler;
+      end if;
    end Poke_Handler;
 
    --------------
@@ -132,9 +146,11 @@ package body Multiprocessors is
    --  Poke the given CPU to signal that a rescheduling may be required
    procedure Poke_CPU (CPU_Id : System.Multiprocessors.CPU) is
    begin
-      if CPU_Id /= Current_CPU then
-         --  Write to the TX FIFO (mailbox) to generate an interrupt on core1
-         SIO_Periph.FIFO_WR := 0;
+      if BB.Parameters.Multiprocessor then
+         if CPU_Id /= Current_CPU then
+            --  Write to the TX FIFO (mailbox) to trigger an interrupt on core1
+            SIO_Periph.FIFO_WR := 0;
+         end if;
       end if;
    end Poke_CPU;
 
@@ -144,18 +160,20 @@ package body Multiprocessors is
 
    procedure Start_All_CPUs is
    begin
-      --  Core1 must be put back to its reset state, otherwise it won't
-      --  respond to the handshake protocol in Launch_Core1.
-      Reset_Core1;
+      if BB.Parameters.Multiprocessor then
+         --  Core1 must be put back to its reset state, otherwise it won't
+         --  respond to the handshake protocol in Launch_Core1.
+         Reset_Core1;
 
-      --  Launch core1.
-      Launch_Core1 (Entry_Point  => Core1_Entry'Address,
-                    Stack        => Core1_Stack'Address + Core1_Stack_Size,
-                    Vector_Table => Vector_Table'Address);
+         --  Launch core1.
+         Launch_Core1 (Entry_Point  => Core1_Entry'Address,
+                     Stack        => Core1_Stack'Address + Core1_Stack_Size,
+                     Vector_Table => Vector_Table'Address);
 
-      --  Enable our Poke Handler interrupt to receive pokes from core1.
+         --  Enable our Poke Handler interrupt to receive pokes from core1.
 
-      Enable_Interrupt_Request (SIO_IRQ_PROC0, Interrupt_Priority'First);
+         Enable_Interrupt_Request (SIO_IRQ_PROC0, Interrupt_Priority'First);
+      end if;
    end Start_All_CPUs;
 
    ----------------
