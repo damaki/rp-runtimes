@@ -83,6 +83,10 @@ The light-tasking and embedded runtime profiles use one of the ALARM interrupts
 to implement Ada semantics for time, i.e., delay statements and the package
 Ada.Real_Time. The timer interrupt runs at the highest priority.
 
+When the runtime is configured to use both cores (i.e. `Max_CPUs` is `2`
+in the runtime configuration), then `SPINLOCK31` is reserved for use by the
+runtime to ensure atomicity of certain operations between the two Cortex-M0+ cores.
+
 The runtime can be configured to use one or both of the RP2040's CPU cores
 (see "Runtime Configuration" below).
 When the runtime is configured for both cores then the runtime takes care
