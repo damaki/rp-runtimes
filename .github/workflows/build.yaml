@@ -32,9 +32,7 @@ jobs:
           version: 2.1.0
 
       - name: Generate Runtime
-        run: |
-          python build-rts.py --rts-src-descriptor=bb-runtimes/gnat_rts_sources/lib/gnat/rts-sources.json ${{ matrix.target }}
-          python crateify.py --runtime-dir=install/${{ matrix.profile }}-${{ matrix.target }} --profile=${{ matrix.profile }} --pretty-target=${{ matrix.target }}
+        run: ./generate-all.sh
 
       # Use the validation build profile to enforce static analysis and coding style.
       - name: Build Runtime
