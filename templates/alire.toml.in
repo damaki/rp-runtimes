@@ -22,6 +22,14 @@ Then edit your project file to add the following elements:
       for Target use runtime_build'Target;
       for Runtime ("Ada") use runtime_build'Runtime ("Ada");
    ```
+ - specify the `Linker` switches:
+   ```ada
+   package Linker is
+     for Switches ("Ada") use Runtime_Build.Linker_Switches & ("-Wl,--gc-sections");
+   end Linker;
+   ```
+   Note that `--gc-switches` is recommended as it reduces flash and RAM usage
+   by removing unused code and data, but it is not mandatory.
 
 See the project website for details on configuring the runtime.
 """
