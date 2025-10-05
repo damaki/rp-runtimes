@@ -30,9 +30,10 @@ jobs:
       - uses: alire-project/setup-alire@v4
         with:
           version: 2.1.0
+          toolchain: 'gnat_arm_elf gprbuild'
 
       - name: Generate Runtime (Linux)
-        if: ${{ matrix.os == 'linux-latest' }}
+        if: ${{ matrix.os == 'ubuntu-latest' }}
         run: ./generate-all.sh
 
       - name: Generate Runtime (Windows)
