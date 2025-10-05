@@ -31,8 +31,15 @@ jobs:
         with:
           version: 2.1.0
 
-      - name: Generate Runtime
+      - name: Generate Runtime (Linux)
+        if: ${{ matrix.os == 'linux-latest' }}
         run: ./generate-all.sh
+
+      - name: Generate Runtime (Windows)
+        if: ${{ matrix.os == 'windows-latest' }}
+        run: |
+          python build-rts.py --rts-src-descriptor=bb-runtimes/gnat_rts_sources/lib/gnat/rts-sources.json ${{ matrix.target }}
+          python crateify.py --runtime-dir=install/${{ matrix.profile }}-${{ matrix.target }} --profile=${{ matrix.profile }} --pretty-target=${{ matrix.target }}
 
       # Use the validation build profile to enforce static analysis and coding style.
       - name: Build Runtime
