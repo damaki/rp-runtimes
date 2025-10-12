@@ -39,41 +39,110 @@ class RP2040(arm.cortexm.CortexM0P):
 
         # Common GNAT sources
         self.add_gnat_sources(
-            "rp_src/boot2/generated/boot2-generic_03.S",
-            "rp_src/boot2/generated/boot2-generic_qspi.S",
-            "rp_src/boot2/generated/boot2-w25qxx.S",
-            "rp_src/svd/i-rp2040.ads",
-            "rp_src/svd/i-rp2040-clocks.ads",
-            "rp_src/svd/i-rp2040-pll_sys.ads",
-            "rp_src/svd/i-rp2040-psm.ads",
-            "rp_src/svd/i-rp2040-resets.ads",
-            "rp_src/svd/i-rp2040-rosc.ads",
-            "rp_src/svd/i-rp2040-sio.ads",
-            "rp_src/svd/i-rp2040-timer.ads",
-            "rp_src/svd/i-rp2040-watchdog.ads",
-            "rp_src/svd/i-rp2040-xosc.ads",
-            "rp_src/s-bbmcpa.ads",
-            "rp_src/start-rom-1.S",
-            "rp_src/start-rom-2.S",
-            "rp_src/s-bootro.ads",
-            "rp_src/s-bootro.adb",
-            "rp_src/setup_clocks.adb",
-            "rp_src/s-bbbopa.ads",
+            "rp2040_src/boot2/generated/boot2-generic_03.S",
+            "rp2040_src/boot2/generated/boot2-generic_qspi.S",
+            "rp2040_src/boot2/generated/boot2-w25qxx.S",
+            "rp2040_src/svd/i-rp2040.ads",
+            "rp2040_src/svd/i-rp2040-clocks.ads",
+            "rp2040_src/svd/i-rp2040-pll_sys.ads",
+            "rp2040_src/svd/i-rp2040-psm.ads",
+            "rp2040_src/svd/i-rp2040-resets.ads",
+            "rp2040_src/svd/i-rp2040-rosc.ads",
+            "rp2040_src/svd/i-rp2040-sio.ads",
+            "rp2040_src/svd/i-rp2040-timer.ads",
+            "rp2040_src/svd/i-rp2040-watchdog.ads",
+            "rp2040_src/svd/i-rp2040-xosc.ads",
+            "rp2040_src/s-bbmcpa.ads",
+            "rp2040_src/start-rom-1.S",
+            "rp2040_src/start-rom-2.S",
+            "rp2040_src/s-bootro.ads",
+            "rp2040_src/s-bootro.adb",
+            "rp2040_src/setup_clocks.adb",
+            "rp2040_src/s-bbbopa.ads",
         )
 
         # s-maxres__cortexm3.adb is also compatible with Cortex-M0+
         self.add_gnat_sources("src/s-macres__cortexm3.adb")
 
         # Common GNARL sources
-        self.add_gnarl_sources("rp_src/s-bbpara.ads")
+        self.add_gnarl_sources("rp2040_src/s-bbpara.ads")
 
         self.add_gnarl_sources(
-            "rp_src/a-intnam-1.ads",
-            "rp_src/a-intnam-2.ads",
-            "rp_src/s-bbbosu.adb",
-            "rp_src/s-bbpara.ads",
-            "rp_src/s-bbsumu.adb",
-            "rp_src/s-bcpcst.adb",
+            "rp2040_src/a-intnam-1.ads",
+            "rp2040_src/a-intnam-2.ads",
+            "rp2040_src/s-bbbosu.adb",
+            "rp2040_src/s-bbpara.ads",
+            "rp2040_src/s-bbsumu.adb",
+            "rp2040_src/s-bcpcst.adb",
+            "src/s-bbcppr__armv7m.adb",
+            "src/s-bbcppr__old.ads",
+            "src/s-bbcpsp__cortexm.ads",
+            "src/s-bcpcst__armvXm.ads",
+        )
+
+
+class RP2350(arm.cortexm.CortexM33F):
+    @property
+    def name(self):
+        return "rp2350"
+
+    @property
+    def parent(self):
+        # Don't refer to any parent since we need to override certain
+        # sources from CortexMArch (e.g. replace src/s-bbsumu__generic.adb)
+        return None
+
+    @property
+    def has_double_precision_fpu(self):
+        return False
+
+    @property
+    def loaders(self):
+        return ("ROM",)
+
+    @property
+    def system_ads(self):
+        return {
+            "light-tasking": "system-xi-arm-sfp.ads",
+            "embedded": "system-xi-arm-full.ads",
+        }
+
+    def __init__(self):
+        super(RP2350, self).__init__()
+
+        # Common GNAT sources
+        self.add_gnat_sources(
+            "rp2350_src/svd/i-rp2350.ads",
+            "rp2350_src/svd/i-rp2350-clocks.ads",
+            "rp2350_src/svd/i-rp2350-pll_sys.ads",
+            "rp2350_src/svd/i-rp2350-psm.ads",
+            "rp2350_src/svd/i-rp2350-resets.ads",
+            "rp2350_src/svd/i-rp2350-rosc.ads",
+            "rp2350_src/svd/i-rp2350-sio.ads",
+            "rp2350_src/svd/i-rp2350-timer0.ads",
+            "rp2350_src/svd/i-rp2350-timer1.ads",
+            "rp2350_src/svd/i-rp2350-watchdog.ads",
+            "rp2350_src/svd/i-rp2350-xosc.ads",
+            "rp2350_src/s-bbmcpa.ads",
+            "rp2350_src/image_def.S.inc",
+            "rp2350_src/start-rom.S",
+            "rp2350_src/setup_clocks.adb",
+            "rp2350_src/s-bbbopa.ads",
+        )
+
+        # s-maxres__cortexm3.adb is also compatible with Cortex-M0+
+        self.add_gnat_sources("src/s-macres__cortexm3.adb")
+
+        # Common GNARL sources
+        self.add_gnarl_sources("rp2350_src/s-bbpara.ads")
+
+        self.add_gnarl_sources(
+            "rp2350_src/a-intnam-1.ads",
+            "rp2350_src/a-intnam-2.ads",
+            "rp2350_src/s-bbbosu.adb",
+            "rp2350_src/s-bbpara.ads",
+            "rp2350_src/s-bbsumu.adb",
+            "rp2350_src/s-bcpcst.adb",
             "src/s-bbcppr__armv7m.adb",
             "src/s-bbcppr__old.ads",
             "src/s-bbcpsp__cortexm.ads",
@@ -83,6 +152,8 @@ class RP2040(arm.cortexm.CortexM0P):
 def build_configs(target):
     if target == "rp2040":
         return RP2040()
+    if target == "rp2350":
+        return RP2350()
     else:
         assert False, "unexpected target: %s" % target
 

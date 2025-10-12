@@ -64,18 +64,24 @@ def gen_from_template(
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        "--runtime-dir", type=str, help="Path to the runtime directory to patch"
+        "--runtime-dir",
+        type=str,
+        required=True,
+        help="Path to the runtime directory to patch",
     )
     parser.add_argument(
         "--profile",
         type=str,
         choices=["light", "light-tasking", "embedded"],
+        required=True,
         help="The runtime profile",
     )
     parser.add_argument(
-        "--pretty-target",
+        "--target",
         type=str,
-        help="The pretty name of the target (e.g. RP2040). Must not contain spaces",
+        choices=["rp2040", "rp2350"],
+        required=True,
+        help="The name of the target (e.g. rp2040). Must not contain spaces",
     )
     parser.add_argument(
         "--version",
@@ -88,8 +94,8 @@ def main():
 
     runtime_dir = pathlib.Path(args.runtime_dir)
     profile = args.profile
-    pretty_target = args.pretty_target
-    target = pretty_target.lower().replace("-", "_")
+    pretty_target = args.target.upper()
+    target = args.target.replace("-", "_")
 
     has_libgnarl = (runtime_dir / "ravenscar_build.gpr").exists()
 
@@ -117,7 +123,7 @@ def main():
         "languages_list": ", ".join(f'"{lang}"' for lang in languages_list),
     }
 
-    templates_dir = pathlib.Path(__file__).parent / "templates"
+    templates_dir = pathlib.Path(__file__).parent / "templates" / target
 
     gen_from_template(
         template_file=templates_dir / "alire.toml.in",
@@ -126,10 +132,17 @@ def main():
     )
 
     gen_from_template(
-        template_file=templates_dir / "rp2040_runtime_config.ads.in",
-        out_file=runtime_dir / "gnat_user" / "rp2040_runtime_config.ads",
+        template_file=templates_dir / f"{target}_runtime_config.ads.in",
+        out_file=runtime_dir / "gnat_user" / f"{target}_runtime_config.ads",
         template_values=template_values,
     )
+
+    if (templates_dir / f"{target}_runtime_config.h.in").exists():
+        gen_from_template(
+            template_file=templates_dir / f"{target}_runtime_config.h.in",
+            out_file=runtime_dir / "gnat_user" / f"{target}_runtime_config.h",
+            template_values=template_values,
+        )
 
     gen_from_template(
         template_file=templates_dir / "runtime_build.gpr.in",
@@ -145,10 +158,11 @@ def main():
         )
 
     shutil.copytree(
-        src=pathlib.Path(__file__).parent / "rp_src" / "ld",
+        src=pathlib.Path(__file__).parent / f"{target}_src" / "ld",
         dst=runtime_dir / "ld",
         dirs_exist_ok=True,
     )
+
 
 if __name__ == "__main__":
     main()

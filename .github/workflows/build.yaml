@@ -14,7 +14,7 @@ jobs:
         # problems in the past.
         os: ["ubuntu-latest", "windows-latest"]
         profile: ["light-tasking", "embedded"]
-        target: ["rp2040"]
+        target: ["rp2040", "rp2350"]
 
     runs-on: ${{ matrix.os }}
 
@@ -40,7 +40,7 @@ jobs:
         if: ${{ matrix.os == 'windows-latest' }}
         run: |
           python build-rts.py --rts-src-descriptor=bb-runtimes/gnat_rts_sources/lib/gnat/rts-sources.json ${{ matrix.target }}
-          python crateify.py --runtime-dir=install/${{ matrix.profile }}-${{ matrix.target }} --profile=${{ matrix.profile }} --pretty-target=${{ matrix.target }}
+          python crateify.py --runtime-dir=install/${{ matrix.profile }}-${{ matrix.target }} --profile=${{ matrix.profile }} --target=${{ matrix.target }}
 
       # Use the validation build profile to enforce static analysis and coding style.
       - name: Build Runtime
