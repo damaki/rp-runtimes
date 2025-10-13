@@ -206,17 +206,12 @@ begin
    --  Enable RESUS in case things go badly
    CLOCKS_Periph.CLK_SYS_RESUS_CTRL.ENABLE := 1;
 
-   --  Enable watchdog and maybe XOSC
+   --  Enable XOSC
    if Has_XOSC then
       Enable_XOSC;
    else
       Enable_ROSC;
    end if;
-
-   --  Configure 1 MHz clk_ref.
-   CLOCKS_Periph.CLK_REF_DIV :=
-     (INT    => CLK_REF_DIV_INT_Field (Reference / 1_000_000),
-      others => <>);
 
    CLOCKS_Periph.FC0_REF_KHZ.FC0_REF_KHZ :=
      FC0_REF_KHZ_FC0_REF_KHZ_Field (Reference / 1_000);

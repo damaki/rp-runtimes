@@ -117,10 +117,27 @@ package System.BB.Board_Parameters is
    --  Multiplier to increase the XOSC startup delay for slow-starting
    --  oscillators.
 
-   Reference : constant Hertz := (if Has_XOSC
-                                  then RP2350_Runtime_Config.XOSC_Frequency
-                                  else ROSC_Frequency);
+   Reference : constant Hertz :=
+      (if Has_XOSC then
+         (case RP2350_Runtime_Config.Board is
+            when RP2350_Runtime_Config.generic_board             =>
+               RP2350_Runtime_Config.XOSC_Frequency,
+
+            when RP2350_Runtime_Config.rpi_pico2                 => 12_000_000,
+            when RP2350_Runtime_Config.pimoroni_pico_lipo_2_xl_w => 12_000_000,
+            when RP2350_Runtime_Config.pimoroni_pico_plus_2      => 12_000_000,
+            when RP2350_Runtime_Config.pimoroni_plasma_2350      => 12_000_000,
+            when RP2350_Runtime_Config.pimoroni_tiny_2350        => 12_000_000,
+            when RP2350_Runtime_Config.pimoroni_rp2350_stamp_xl  => 12_000_000,
+            when RP2350_Runtime_Config.pimoroni_rp2350_stamp     => 12_000_000,
+            when RP2350_Runtime_Config.pimoroni_pga2350          => 12_000_000,
+            when RP2350_Runtime_Config.adafruit_feather_rp2350   => 12_000_000,
+            when RP2350_Runtime_Config.adafruit_metro_rp2350     => 12_000_000,
+            when RP2350_Runtime_Config.adafruit_fruit_jam        => 12_000_000)
+       else ROSC_Frequency);
    --  Reference frequency depends on the oscillator used.
+
+   Clk_Ref_Frequency : constant := Reference;
 
    --  pll_sys configuration
    --  clk_sys = ((fref / refdiv) * vco_multiple) / (postdiv1 * postdiv2)
@@ -148,6 +165,7 @@ package System.BB.Board_Parameters is
    --  Frequency of the clock that is used to implement Ada semantics for time,
    --  i.e. delay statements and package Ada.Real_Time.
    --
-   --  This runtime uses one of the timer peripherals, which run at 1 MHz.
+   --  This runtime uses one of the timer peripherals, which is configured to
+   --  run at 1 MHz.
 
 end System.BB.Board_Parameters;

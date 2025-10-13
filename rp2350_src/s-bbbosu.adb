@@ -37,10 +37,12 @@
 with System.Machine_Code;
 
 with System.BB.CPU_Primitives;
+with System.BB.Board_Parameters;
 with System.Multiprocessors;   use System.Multiprocessors;
 
 with Interfaces;               use Interfaces;
 with Interfaces.RP2350;        use Interfaces.RP2350;
+with Interfaces.RP2350.TICKS;  use Interfaces.RP2350.TICKS;
 with Interfaces.RP2350.TIMER0; use Interfaces.RP2350.TIMER0;
 
 with RP2350_Runtime_Config;
@@ -168,9 +170,29 @@ package body System.BB.Board_Support is
    ----------------------
 
    procedure Initialize_Board is
+      TIMER_Divider : constant :=
+        Board_Parameters.Clk_Ref_Frequency / 1_000_000;
+
    begin
       --  Mask interrupts
       Disable_Interrupts;
+
+      --  Configure TIMER1 to run at 1 MHz
+      case RP2350_Runtime_Config.Time_Base_Timer is
+         when RP2350_Runtime_Config.TIMER0 =>
+            TICKS_Periph.TIMER0_CTRL.ENABLE := 0;
+            TICKS_Periph.TIMER0_CYCLES :=
+              (TIMER0_CYCLES => TIMER_Divider,
+               others        => <>);
+            TICKS_Periph.TIMER0_CTRL.ENABLE := 1;
+
+         when RP2350_Runtime_Config.TIMER1 =>
+            TICKS_Periph.TIMER1_CTRL.ENABLE := 0;
+            TICKS_Periph.TIMER1_CYCLES :=
+              (TIMER1_CYCLES => TIMER_Divider,
+               others        => <>);
+            TICKS_Periph.TIMER1_CTRL.ENABLE := 1;
+      end case;
 
       Time.Set_Alarm (Max_Timer_Interval);
       Time.Clear_Alarm_Interrupt;

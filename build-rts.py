@@ -119,6 +119,7 @@ class RP2350(arm.cortexm.CortexM33F):
             "rp2350_src/svd/i-rp2350-resets.ads",
             "rp2350_src/svd/i-rp2350-rosc.ads",
             "rp2350_src/svd/i-rp2350-sio.ads",
+            "rp2350_src/svd/i-rp2350-ticks.ads",
             "rp2350_src/svd/i-rp2350-timer0.ads",
             "rp2350_src/svd/i-rp2350-timer1.ads",
             "rp2350_src/svd/i-rp2350-watchdog.ads",
