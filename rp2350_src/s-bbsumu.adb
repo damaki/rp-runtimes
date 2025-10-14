@@ -125,7 +125,11 @@ package body Multiprocessors is
    procedure Poke_Handler is
    begin
       if BB.Parameters.Multiprocessor then
-         Drain_FIFO;
+         --  Acknowledge the doorbell
+
+         SIO_Periph.DOORBELL_IN_CLR := (DOORBELL_IN_CLR => 1,
+                                        others          => 0);
+
          CPU_Primitives.Multiprocessors.Poke_Handler;
       end if;
    end Poke_Handler;
@@ -139,8 +143,8 @@ package body Multiprocessors is
    begin
       if BB.Parameters.Multiprocessor then
          if CPU_Id /= Current_CPU then
-            --  Write to the TX FIFO (mailbox) to trigger an interrupt on core1
-            SIO_Periph.FIFO_WR := 0;
+            SIO_Periph.DOORBELL_OUT_SET := (DOORBELL_OUT_SET => 1,
+                                            others           => 0);
          end if;
       end if;
    end Poke_CPU;
@@ -158,8 +162,8 @@ package body Multiprocessors is
 
          --  Launch core1.
          Launch_Core1 (Entry_Point  => Core1_Entry'Address,
-                     Stack        => Core1_Stack'Address + Core1_Stack_Size,
-                     Vector_Table => Vector_Table'Address);
+                       Stack        => Core1_Stack'Address + Core1_Stack_Size,
+                       Vector_Table => Vector_Table'Address);
 
          --  Enable our Poke Handler interrupt to receive pokes from core1.
 
