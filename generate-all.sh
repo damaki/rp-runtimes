@@ -45,9 +45,9 @@ done
 echo "Generating runtimes"
 python build-rts.py \
     --rts-src-descriptor=bb-runtimes/gnat_rts_sources/lib/gnat/rts-sources.json \
-    rp2040
+    rp2040 rp2350
 
-for target in rp2040; do
+for target in rp2040 rp2350; do
     for profile in light-tasking embedded; do
         echo "Crateifying ${profile}-${target,,}"
 
@@ -55,12 +55,12 @@ for target in rp2040; do
             python crateify.py \
                 --runtime-dir=install/${profile}-${target,,} \
                 --profile=${profile} \
-                --pretty-target=${target}
+                --target=${target}
         else
             python crateify.py \
                 --runtime-dir=install/${profile}-${target,,} \
                 --profile=${profile} \
-                --pretty-target=${target} \
+                --target=${target} \
                 --version=$version
         fi
     done
