@@ -13,6 +13,7 @@ The following peripherals are reserved for use by the the runtime:
   SIO doorbell is not reserved and can be used by the application.
 
 The following peripherals configured by the runtime:
+* The runtime enables the redundancy coprocessor at startup.
 * The runtime configures `clk_ref` to run at the reference clock speed, either
   XOSC or ROSC depending on the runtime configuration. `clk_ref` therefore
   runs at 12 MHz unless a different XOSC frequency is used.
@@ -20,6 +21,14 @@ The following peripherals configured by the runtime:
   specified by the user in the runtime configuration. The default configuration
   sets `clk_usb` to 48 MHz and `clk_sys` to 150 MHz.
 * The runtime sets `clk_usb` and `clk_adc` to run from `pll_usb`.
+
+### Ada.Text_IO
+
+The runtime libraries provide a minimal version of package `Ada.Text_IO`
+supporting character and string-based input and output routines. These are
+implemented using semihosting, which requires a debugger to be attached.
+Calling the semihosted Text_IO routines without a debugger attached will
+trigger a HardFault on the processor that uses it.
 
 ## Runtime Configuration
 
