@@ -24,6 +24,14 @@ The following peripherals configured by the runtime:
   `clk_rtc` to run from `pll_usb` divided by 1024 (46.875 kHz).
 * The runtime configures the watchdog tick to run at 1 MHz.
 
+### Ada.Text_IO
+
+The runtime libraries provide a minimal version of package `Ada.Text_IO`
+supporting character and string-based input and output routines. These are
+implemented using semihosting, which requires a debugger to be attached.
+Calling the semihosted Text_IO routines without a debugger attached will
+trigger a HardFault on the processor that uses it.
+
 ## Runtime Configuration
 
 The runtime can be configured by setting various crate configuration variables
