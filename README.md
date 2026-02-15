@@ -30,9 +30,10 @@ Using the `light_tasking_rp2040` runtime as an example, first edit your
    ```
 
 Then edit your project file to add the following elements:
- - "with" the run-time project file:
+ - "with" the run-time project files:
    ```ada
    with "runtime_build.gpr";
+   with "ravenscar_build.gpr";
    ```
  - specify the `Target` and `Runtime` attributes:
    ```ada
