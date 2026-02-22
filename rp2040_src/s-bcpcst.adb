@@ -103,7 +103,7 @@ package body System.BB.CPU_Primitives.Context_Switch_Trigger is
          --  CPUID = 0 on core0
          --  CPUID = 1 on core1
 
-         "ldr r0, =0xD0020000" & NL & --  Load address of CPUID register.
+         "ldr r0, =0xD0000000" & NL & --  Load address of CPUID register.
          "ldr r0, [r0]" & NL & --  Read CPUID register into r0
          "lsl r0, #2" & NL &  --  multiply by 4
 
