@@ -32,15 +32,9 @@ jobs:
           version: 2.1.0
           toolchain: 'gnat_arm_elf gprbuild'
 
-      - name: Generate Runtime (Linux)
-        if: ${{ matrix.os == 'ubuntu-latest' }}
+      - name: Generate Runtimes
+        shell: bash
         run: ./generate-all.sh
-
-      - name: Generate Runtime (Windows)
-        if: ${{ matrix.os == 'windows-latest' }}
-        run: |
-          python build-rts.py --rts-src-descriptor=bb-runtimes/gnat_rts_sources/lib/gnat/rts-sources.json ${{ matrix.target }}
-          python crateify.py --runtime-dir=install/${{ matrix.profile }}-${{ matrix.target }} --profile=${{ matrix.profile }} --target=${{ matrix.target }}
 
       # Use the validation build profile to enforce static analysis and coding style.
       - name: Build Runtime
