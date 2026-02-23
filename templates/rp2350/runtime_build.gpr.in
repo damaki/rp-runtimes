@@ -58,6 +58,18 @@ project Runtime_Build is
 
    package Naming is
       for Spec_Suffix ("Asm_CPP") use ".inc";
+      for Spec ("Interfaces.RP2350")          use "i-rp2350.ads";
+      for Spec ("Interfaces.RP2350.CLOCKS")   use "i-rp2350-clocks.ads";
+      for Spec ("Interfaces.RP2350.PLL_SYS")  use "i-rp2350-pll_sys.ads";
+      for Spec ("Interfaces.RP2350.PSM")      use "i-rp2350-psm.ads";
+      for Spec ("Interfaces.RP2350.RESETS")   use "i-rp2350-resets.ads";
+      for Spec ("Interfaces.RP2350.ROSC")     use "i-rp2350-rosc.ads";
+      for Spec ("Interfaces.RP2350.SIO")      use "i-rp2350-sio.ads";
+      for Spec ("Interfaces.RP2350.TICKS")    use "i-rp2350-ticks.ads";
+      for Spec ("Interfaces.RP2350.TIMER0")   use "i-rp2350-timer0.ads";
+      for Spec ("Interfaces.RP2350.TIMER1")   use "i-rp2350-timer1.ads";
+      for Spec ("Interfaces.RP2350.WATCHDOG") use "i-rp2350-watchdog.ads";
+      for Spec ("Interfaces.RP2350.XOSC")     use "i-rp2350-xosc.ads";
    end Naming;
 
    package Compiler is
