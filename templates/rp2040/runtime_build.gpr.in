@@ -106,6 +106,16 @@ project Runtime_Build is
 
    package Naming is
       for Spec_Suffix ("Asm_CPP") use ".inc";
+      for Spec ("Interfaces.RP2040")          use "i-rp2040.ads";
+      for Spec ("Interfaces.RP2040.CLOCKS")   use "i-rp2040-clocks.ads";
+      for Spec ("Interfaces.RP2040.PLL_SYS")  use "i-rp2040-pll_sys.ads";
+      for Spec ("Interfaces.RP2040.PSM")      use "i-rp2040-psm.ads";
+      for Spec ("Interfaces.RP2040.RESETS")   use "i-rp2040-resets.ads";
+      for Spec ("Interfaces.RP2040.ROSC")     use "i-rp2040-rosc.ads";
+      for Spec ("Interfaces.RP2040.SIO")      use "i-rp2040-sio.ads";
+      for Spec ("Interfaces.RP2040.TIMER")    use "i-rp2040-timer.ads";
+      for Spec ("Interfaces.RP2040.WATCHDOG") use "i-rp2040-watchdog.ads";
+      for Spec ("Interfaces.RP2040.XOSC")     use "i-rp2040-xosc.ads";
    end Naming;
 
    package Compiler is
