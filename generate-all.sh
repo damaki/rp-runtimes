@@ -48,7 +48,7 @@ python build-rts.py \
     rp2040 rp2350
 
 for target in rp2040 rp2350; do
-    for profile in light-tasking embedded; do
+    for profile in light light-tasking embedded; do
         echo "Crateifying ${profile}-${target,,}"
 
         if [[ -z $version ]]; then

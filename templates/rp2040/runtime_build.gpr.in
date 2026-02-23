@@ -82,13 +82,6 @@ project Runtime_Build is
 
    Excluded_Sources := ();
 
-   case $(profile_underscored)_Rp2040_Config.Max_CPUs is
-      when "1" =>
-         Excluded_Sources := Excluded_Sources & ("start-rom-2.S");
-      when others =>
-         Excluded_Sources := Excluded_Sources & ("start-rom-1.S");
-   end case;
-
    case Flash_Chip is
       when "generic_qspi_128" | "at25sf128a" | "gd25q64c" =>
          --  Use boot2-generic_qspi.S and exclude the other variants

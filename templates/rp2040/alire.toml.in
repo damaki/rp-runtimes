@@ -15,8 +15,7 @@ First edit your `alire.toml` file and add the following elements:
 Then edit your project file to add the following elements:
  - "with" the run-time project files. With this, gprbuild will compile the run-time before your application
    ```ada
-   with "runtime_build.gpr";
-   with "ravenscar_build.gpr";
+$(project_file_withs)
    ```
  - Specify the `Target` and `Runtime` attributes:
    ```ada
@@ -45,13 +44,12 @@ website = "https://github.com/damaki/rp-runtimes"
 project-files = $(project_files_list)
 
 [configuration]
-generate_c = false
 output_dir = "gnat_user"
 
 [configuration.variables]
 
 # Configures how many of the two cores the runtime uses
-Max_CPUs = { type = "Integer", first = 1, last = 2, default = 2 }
+Max_CPUs = { type = "Integer", first = 1, last = $(max_cpus), default = $(max_cpus) }
 
 # Configures which ALARM the runtime uses to implement the semantics of
 # Ada.Real_Time

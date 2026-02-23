@@ -30,6 +30,7 @@ class RP2040(arm.cortexm.CortexM0P):
     @property
     def system_ads(self):
         return {
+            "light": "system-xi-arm.ads",
             "light-tasking": "system-xi-armv6m-sfp.ads",
             "embedded": "system-xi-armv6m-full.ads",
         }
@@ -53,8 +54,7 @@ class RP2040(arm.cortexm.CortexM0P):
             "rp2040_src/svd/i-rp2040-watchdog.ads",
             "rp2040_src/svd/i-rp2040-xosc.ads",
             "rp2040_src/s-bbmcpa.ads",
-            "rp2040_src/start-rom-1.S",
-            "rp2040_src/start-rom-2.S",
+            "rp2040_src/start-rom.S",
             "rp2040_src/s-bootro.ads",
             "rp2040_src/s-bootro.adb",
             "rp2040_src/setup_clocks.adb",
@@ -103,6 +103,7 @@ class RP2350(arm.cortexm.CortexM33F):
     @property
     def system_ads(self):
         return {
+            "light": "system-xi-arm.ads",
             "light-tasking": "system-xi-arm-sfp.ads",
             "embedded": "system-xi-arm-full.ads",
         }

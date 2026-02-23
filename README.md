@@ -3,9 +3,16 @@
 This repository contains the sources to generate Ada/SPARK runtimes for the GNAT
 compiler, targeting the Raspberry Pi RP2040 and RP2350 microcontrollers.
 
-Runtimes are provided for both the "light-tasking" and "embedded" runtime
-profiles (see the [GNAT User's Guide Supplement for Cross Platforms](https://docs.adacore.com/live/wave/gnat_ugx/html/gnat_ugx/gnat_ugx/gnat_runtimes.html) for more details).
+The following runtime profiles are supported
+(see the [GNAT User's Guide Supplement for Cross Platforms](https://docs.adacore.com/live/wave/gnat_ugx/html/gnat_ugx/gnat_ugx/gnat_runtimes.html)
+for more details):
+* light
+* light-tasking
+* embedded
+
 The complete list of available runtimes are:
+* `light_rp2040`
+* `light_rp2350`
 * `light_tasking_rp2040`
 * `light_tasking_rp2350`
 * `embedded_rp2040`
@@ -54,10 +61,10 @@ Then edit your project file to add the following elements:
 
 ## Multitasking
 
-These runtimes support multitasking across both cores on the RP2040/RP2350
-using the Ada language's task and protected object mechanisms.
-By default, tasks run on the first core. Tasks can be pinned to the
-second core using the `CPU` aspect or pragma in the task declaration.
+The _light-tasking_ and _embedded_ runtime profiles support multitasking across
+both cores on the RP2040/RP2350 using the Ada language's task and protected
+object mechanisms. By default, tasks run on the first core. Tasks can be pinned
+to the second core using the `CPU` aspect or pragma in the task declaration.
 For example, to declare a task that runs on the second core:
 
 ```ada
@@ -87,4 +94,6 @@ end My_PO;
 >[!TIP]
 >If you don't want the runtime to use the second core, then you can configure
 >the runtime to only use the first core by setting the `Max_CPUs` crate
->configuration variable to `1`. See section "General Configuration" below.
+>configuration variable to `1`. See [README-RP2040.md](README-RP2040.md) and
+>[README-RP2350.md](README-RP2350.md). The _light_ runtime profile always uses
+>1 core.

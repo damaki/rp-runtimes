@@ -13,7 +13,7 @@ jobs:
         # Also build on Windows since there have been some windows-specific
         # problems in the past.
         os: ["ubuntu-latest", "windows-latest"]
-        profile: ["light-tasking", "embedded"]
+        profile: ["light", "light-tasking", "embedded"]
         target: ["rp2040", "rp2350"]
 
     runs-on: ${{ matrix.os }}

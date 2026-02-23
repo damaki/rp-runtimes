@@ -15,6 +15,16 @@ import shutil
 from typing import Dict
 
 
+project_file_withs_light = """\
+   with "runtime_build.gpr";\
+"""
+
+project_file_withs_ravenscar = """\
+   with "runtime_build.gpr";
+   with "ravenscar_build.gpr";\
+"""
+
+
 def patch_target_options(gpr_file: pathlib.Path, profile: str, target: str):
     """Patch the target_options.gpr file to add the crate name as a prefix
     to GPR variables.
@@ -121,6 +131,10 @@ def main():
         "project_files_list": str(project_files),
         "version": args.version,
         "languages_list": ", ".join(f'"{lang}"' for lang in languages_list),
+        "project_file_withs": (
+            project_file_withs_ravenscar if has_libgnarl else project_file_withs_light
+        ),
+        "max_cpus": "2" if has_libgnarl else "1",
     }
 
     templates_dir = pathlib.Path(__file__).parent / "templates" / target
