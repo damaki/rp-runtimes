@@ -2,7 +2,8 @@
 
 ## Resources Used
 
-The following peripherals are reserved for use by the the runtime:
+The following peripherals are reserved for use by the the runtime
+(_light-tasking_ and _embedded_ runtime profiles only):
 * One of the System Timers' ALARM channels is used to implement Ada semantics
   for time, i.e., delay statements and the package `Ada.Real_Time`.
   The timer interrupt runs at the highest priority.
@@ -37,6 +38,10 @@ in your project's `alire.toml`. The available configuration options are describe
 in the following subsections:
 
 ### General Configuration
+
+>[!NOTE]
+>The following configuration items apply to the _light-tasking_ and _embedded_
+>runtime profiles only.
 
 <table>
   <thead>
