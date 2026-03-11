@@ -1,5 +1,8 @@
 # RP2040 and RP2350 Runtimes
 
+> [!IMPORTANT]
+> rp-runtimes has moved to [community-bb-runtimes](https://github.com/damaki/community-bb-runtimes).
+
 This repository contains the sources to generate Ada/SPARK runtimes for the GNAT
 compiler, targeting the Raspberry Pi RP2040 and RP2350 microcontrollers.
 
